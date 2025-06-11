@@ -1,0 +1,155 @@
+/* public/style-app.css - Versão com estilos separados e corrigidos */
+
+/* ===== ESTILOS GERAIS ===== */
+body.app-body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    background-color: #f4f7f6;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+main {
+    flex-grow: 1;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ===== CABEÇALHO (Comum a todas as páginas da app) ===== */
+.app-header { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 0 30px; position: sticky; top: 0; z-index: 100; }
+.header-container { display: flex; align-items: center; justify-content: space-between; height: 64px; max-width: 1400px; margin: 0 auto; }
+/* ... (outros estilos do cabeçalho que já estavam corretos) ... */
+.app-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #111827; font-weight: 600; font-size: 1.2rem; }
+.app-logo img { height: 32px; width: 32px; }
+.header-center { display: flex; gap: 25px; }
+.nav-item { text-decoration: none; color: #4b5563; font-weight: 500; padding: 10px; border-radius: 5px; transition: background-color 0.2s; }
+.nav-item:hover { background-color: #f3f4f6; }
+.header-right { display: flex; align-items: center; gap: 20px; }
+.profile-button { background: none; border: none; cursor: pointer; padding: 0; border-radius: 50%; display: flex; align-items: center; gap: 8px; font-size: 1rem; }
+.profile-button img { height: 36px; width: 36px; border-radius: 50%; }
+.dropdown { position: relative; display: inline-block; }
+.dropdown-content { display: none; position: absolute; background-color: #fff; min-width: 180px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); z-index: 1; right: 0; top: 100%; margin-top: 10px; border-radius: 8px; overflow: hidden; }
+.dropdown-content a { color: #374151; padding: 12px 16px; text-decoration: none; display: block; font-size: 0.9rem; }
+.dropdown-content a:hover { background-color: #f3f4f6; }
+.dropdown-content hr { margin: 5px 0; border: 0; border-top: 1px solid #eee; }
+.dropdown:hover .dropdown-content { display: block; }
+.btn-logout { background-color: #ef4444; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: 500; transition: background-color 0.2s; }
+.btn-logout:hover { background-color: #dc2626; }
+
+/* ===== ESTILOS DO DASHBOARD ===== */
+.dashboard-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* <<< ALTERADO: Alinha o conteúdo ao topo */
+    padding: 40px 20px;
+}
+.tool-card {
+    width: 100%;
+    max-width: 600px;
+}
+.tool-header { text-align: center; }
+#header-logo { max-width: 320px; margin-bottom: 10px; }
+.tool-header p { font-size: 1.1rem; color: #6b7280; margin-top: 0; }
+.action-container { text-align: left; margin-top: 20px; background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+.action-container label { display: block; margin-bottom: 8px; font-weight: 500; color: #334155; }
+#urlInput { width: 100%; padding: 12px 15px; font-size: 1rem; border: 1px solid #ccd0d5; border-radius: 6px; box-sizing: border-box; }
+.button-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
+.app-btn { padding: 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: 500; font-size: 1rem; }
+.primary { background-color: #3b82f6; color: white; }
+.secondary { background-color: #e5e7eb; color: #1f2937; }
+.tertiary { background-color: #334155; color: white; }
+
+/* ===== ESTILOS DA PÁGINA DE HISTÓRICO ===== */
+.history-container {
+    width: 100%;
+    max-width: 1100px; /* Largura máxima para o conteúdo do histórico */
+    margin: 0 auto;    /* Centraliza o container */
+    padding: 40px 20px;
+    box-sizing: border-box;
+}
+.history-container h1 { margin-top: 0; }
+.history-list { margin-top: 30px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+.history-item { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #e5e7eb; }
+.history-item:last-child { border-bottom: none; }
+.history-info { display: flex; flex-direction: column; gap: 5px; }
+.history-url { font-weight: 500; color: #111827; text-decoration: none; }
+.history-url:hover { color: #3b82f6; text-decoration: underline; }
+.history-date { font-size: 0.85rem; color: #6b7280; }
+.history-actions .app-btn { padding: 8px 12px; font-size: 0.9rem; }
+.history-item-empty { padding: 40px; text-align: center; color: #6b7280; }
+
+/* ===== RODAPÉ DA APLICAÇÃO ===== */
+.app-footer {
+    width: 100%;
+    background-color: #1f2937;
+    box-sizing: border-box;
+    margin-top: auto; /* Garante que o rodapé fica no fundo */
+}
+.footer-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #e5e7eb;
+}
+#footer-logo { max-width: 75px; }
+.footer-right { display: flex; align-items: center; gap: 25px; }
+.footer-right p { margin: 0; font-size: 0.9rem; color: #9ca3af; }
+.support-button { background-color: #374155; color: #e5e7eb; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem; }
+
+/* Adiciona este código ao teu ficheiro style-app.css existente */
+
+/* --- Estilos para Feedback Interativo --- */
+
+/* A classe que o JavaScript usa para esconder/mostrar elementos */
+.hidden {
+    display: none !important;
+}
+
+/* Estilo para a mensagem de "loading" */
+#loading {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e7f3fe;
+    border: 1px solid #d0e0f0;
+    border-radius: 8px;
+    text-align: center;
+    color: #31708f;
+    font-weight: 500;
+    transition: all 0.3s ease-in-out;
+}
+/* Adiciona este código ao final do teu ficheiro de estilos */
+
+/* --- Ajustes de Layout do Dashboard --- */
+
+/* Força o contentor principal a organizar os seus filhos
+  (o .tool-card e o #loading) em uma coluna vertical,
+  um em baixo do outro.
+*/
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra os itens horizontalmente */
+    padding: 20px;
+}
+
+/*
+  Garante que o cartão de ferramentas e a mensagem de loading
+  não excedam uma largura máxima, para um melhor aspeto em
+  ecrãs grandes.
+*/
+.tool-card, #loading {
+    width: 100%;
+    max-width: 650px; /* Ajusta este valor conforme a tua preferência */
+    box-sizing: border-box; /* Garante que padding não afeta a largura total */
+}
+
+/* Adiciona um espaçamento em cima da mensagem de loading
+  para separá-la visualmente do cartão de ferramentas.
+*/
+#loading {
+    margin-top: 20px;
+}

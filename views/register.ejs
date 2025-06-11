@@ -1,0 +1,17 @@
+<!DOCTYPE html><html lang="pt-br"><head><meta charset="UTF-8"><title>Criar Conta - Dreamix</title><link rel="stylesheet" href="/style-auth.css"></head><body>
+    <div class="auth-container">
+        <a href="/"><img src="/assets/logo-completo.jpg" alt="Logotipo Dreamix" class="auth-logo"></a>
+        <h2>Crie a sua conta Dreamix</h2>
+        <p>Comece em segundos e liberte o seu potencial.</p>
+        <% if (error) { %><div class="toast error"><%= error %></div><% } %>
+        <form action="/registo" method="POST" class="auth-form">
+            <label for="name">Nome Completo</label>
+            <input type="text" id="name" name="name" required>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+            <label for="password">Crie uma Senha</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit" class="btn">Criar Conta</button>
+        </form>
+        <div class="auth-link">Já tem uma conta? <a href="/login">Faça o login</a>.</div>
+    </div></body></html>

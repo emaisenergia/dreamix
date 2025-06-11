@@ -1,0 +1,30 @@
+<header class="app-header">
+    <div class="header-container">
+        <div class="header-left">
+            <a href="/" class="app-logo">
+                <img src="/assets/logo-icone.jpg" alt="Dreamix Logo">
+                <span>Dreamix</span>
+            </a>
+        </div>
+
+        <nav class="header-center">
+            <a href="/" class="nav-item">Dashboard</a>
+            <a href="/historico" class="nav-item">Histórico</a>
+        </nav>
+
+        <div class="header-right">
+            <div class="dropdown">
+                <button class="profile-button">
+                    <img src="/assets/profile-icon.png" alt="Ícone de Perfil">
+                    <span><%= user.name %></span>
+                </button>
+                <div class="dropdown-content">
+                    <a href="/perfil">Perfil</a>
+                    <a href="/assinatura">Assinatura</a>
+                    <hr style="margin: 5px 0; border: 0; border-top: 1px solid #eee;">
+                    <a href="/logout">Sair</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

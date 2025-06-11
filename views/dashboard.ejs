@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Dreamix</title>
+    <link rel="stylesheet" href="/style-app.css">
+    <link rel="icon" href="/assets/logo-icone.jpg">
+</head>
+<body class="app-body">
+    <%- include('partials/header-app') %>
+
+    <main class="dashboard-container">
+        <div class="tool-card">
+            <header class="tool-header">
+                <img src="/assets/logo-completo.jpg" alt="Logotipo Dreamix" id="header-logo">
+                <p>Clone um site, edite-o visualmente ou transforme-o num tema WordPress.</p>
+            </header>
+            <div class="action-container">
+                <label for="urlInput">Insira o URL da página de destino:</label>
+                <input type="url" id="urlInput" placeholder="https://exemplo.com">
+                <div class="button-group">
+                    <button id="downloadBtn" class="app-btn primary">Baixar ZIP</button>
+                    <button id="editBtn" class="app-btn secondary">Editar</button>
+                    <button id="wpThemeBtn" class="app-btn tertiary">Gerar Tema WP</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading" class="hidden">A processar...</div>
+        
+    </main>
+
+    <%- include('partials/footer-app') %>
+
+    <script src="/script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Histórico - Dreamix</title>
+    <link rel="stylesheet" href="/style-app.css">
+    <link rel="icon" href="/assets/logo-icone.jpg">
+</head>
+<body class="app-body">
+    <%- include('partials/header-app') %>
+
+    <main class="history-container">
+        <h1>Meu Histórico de Atividade</h1>
+        <p>Aqui estão os últimos sites que você processou na nossa plataforma.</p>
+        <div class="history-list">
+            <% if (history && history.length > 0) { %>
+                <% history.forEach(item => { %>
+                    <div class="history-item">
+                        <div class="history-info">
+                            <a href="<%= item.original_url %>" target="_blank" rel="noopener noreferrer" class="history-url"><%= item.original_url %></a>
+                            <span class="history-date">Processado em: <%= new Date(item.cloned_at).toLocaleDateString('pt-BR') %></span>
+                        </div>
+                        <div class="history-actions">
+                            <a href="/editar?url=<%= encodeURIComponent(item.original_url) %>" class="app-btn secondary">Editar</a>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div class="history-item-empty"><p>Você ainda não tem nenhuma atividade no seu histórico.</p></div>
+            <% } %>
+        </div>
+    </main>
+    
+    <%- include('partials/footer-app') %>
+</body>
+</html>

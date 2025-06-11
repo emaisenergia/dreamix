@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dreamix - Editor de Página</title>
+    <link rel="stylesheet" href="https://unpkg.com/grapesjs/dist/css/grapes.min.css">
+    <script src="https://unpkg.com/grapesjs"></script>
+    <script src="https://unpkg.com/grapesjs-preset-webpage"></script>
+    <style>
+        body, html { margin: 0; height: 100%; overflow: hidden; }
+        #gjs { height: 100vh; box-sizing: border-box; }
+        .gjs-cv-canvas { height: 100%; width: 100%; }
+    </style>
+</head>
+<body>
+    <div id="gjs"></div>
+    <script type="text/javascript">
+        // Inicializa o editor GrapesJS
+        const editor = grapesjs.init({
+            container: '#gjs',
+            storageManager: false, // Não vamos guardar o estado no localStorage
+            plugins: ['grapesjs-preset-webpage'],
+            pluginsOpts: {
+                'grapesjs-preset-webpage': {
+                    // Opções do plugin, se necessário
+                }
+            }
+        });
+
+        // --- CORREÇÃO APLICADA AQUI ---
+        // Usamos JSON.stringify para passar o conteúdo de forma segura para o JavaScript.
+        // O EJS irá executar JSON.stringify no servidor e o resultado será uma string JavaScript válida.
+        const initialHtml = <%- JSON.stringify(htmlContent || '') %>;
+        const initialCss = <%- JSON.stringify(cssContent || '') %>;
+
+        // Carrega o conteúdo no editor
+        editor.setComponents(initialHtml);
+        editor.setStyle(initialCss);
+        
+        // --- Lógica do Botão de Exportar (sem alterações) ---
+        editor.Panels.addButton('options', {
+            id: 'export-zip',
+            className: 'fa fa-download',
+            command: 'export-zip',
+            attributes: { title: 'Descarregar como ZIP' }
+        });
+
+        editor.Commands.add('export-zip', {
+            run: function(editor, sender) {
+                sender && sender.set('active', true);
+                alert('A preparar o seu ficheiro ZIP. Por favor, aguarde...');
+                
+                const html = editor.getHtml();
+                const css = editor.getCss();
+
+                fetch('/exportar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ html, css })
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error('Falha ao gerar o ZIP no servidor.');
+                    return res.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'site_editado.zip';
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                    sender && sender.set('active', false);
+                })
+                .catch(err => {
+                    alert('Ocorreu um erro ao gerar o ZIP.');
+                    console.error(err);
+                    sender && sender.set('active', false);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

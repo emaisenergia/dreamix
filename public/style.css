@@ -1,0 +1,28 @@
+/* public/style.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+:root { --azul-cobalto: #1F3F7A; --cinza-neve: #F5F7FA; --azul-eletrico: #4B9FFF; --cinza-medio: #A3ACB9; --roxo-lavanda: #D3C4F3; --fundo-dark: #070715; }
+body { font-family: 'Inter', sans-serif; background-color: var(--cinza-neve); color: var(--azul-cobalto); margin: 0; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+.page-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - 125px); padding: 20px; box-sizing: border-box; }
+main { background: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); width: 100%; max-width: 600px; text-align: center; }
+header { text-align: center; margin-bottom: 20px; }
+#header-logo { max-width: 320px; height: auto; margin-bottom: 10px; }
+header p { font-size: 1.1rem; color: var(--cinza-medio); max-width: 500px; margin-top: 0; }
+.action-container { text-align: left; margin-top: 20px; }
+.action-container label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--azul-cobalto); }
+#urlInput { width: 100%; padding: 12px 15px; font-size: 1rem; border: 1px solid #ccd0d5; border-radius: 6px; transition: border-color 0.2s, box-shadow 0.2s; box-sizing: border-box; }
+#urlInput:focus { border-color: var(--azul-eletrico); box-shadow: 0 0 0 3px var(--roxo-lavanda); outline: none; }
+.button-group { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 25px; }
+.button-group button { flex-grow: 1; padding: 12px 15px; font-size: 1rem; font-weight: 500; border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.2s, transform 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.button-group button:active { transform: scale(0.98); }
+.button-group button:disabled { background-color: var(--cinza-medio); cursor: not-allowed; color: white; }
+.primary-btn { background-color: var(--azul-eletrico); color: white; }
+.primary-btn:hover { background-color: var(--azul-cobalto); }
+.secondary-btn { background-color: #E4E6EB; color: #050505; border: 1px solid #CED0D4; }
+.secondary-btn:hover { background-color: #d8dbe0; }
+.tertiary-btn { background-color: #23282D; color: white; border: 1px solid #23282D; }
+.tertiary-btn:hover { background-color: #32373C; }
+#loading { text-align: center; font-weight: 500; color: var(--azul-cobalto); margin-top: 20px; padding: 10px; background-color: var(--cinza-neve); border-radius: 6px; }
+.hidden { display: none; }
+footer { width: 100%; background-color: var(--fundo-dark); color: var(--cinza-medio); padding: 30px 40px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; }
+#footer-logo { max-width: 75px; }
+footer p { margin: 0; font-size: 0.9rem; }
