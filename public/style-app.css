@@ -19,7 +19,6 @@ main {
 /* ===== CABEÇALHO (Comum a todas as páginas da app) ===== */
 .app-header { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 0 30px; position: sticky; top: 0; z-index: 100; }
 .header-container { display: flex; align-items: center; justify-content: space-between; height: 64px; max-width: 1400px; margin: 0 auto; }
-/* ... (outros estilos do cabeçalho que já estavam corretos) ... */
 .app-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #111827; font-weight: 600; font-size: 1.2rem; }
 .app-logo img { height: 32px; width: 32px; }
 .header-center { display: flex; gap: 25px; }
@@ -29,20 +28,46 @@ main {
 .profile-button { background: none; border: none; cursor: pointer; padding: 0; border-radius: 50%; display: flex; align-items: center; gap: 8px; font-size: 1rem; }
 .profile-button img { height: 36px; width: 36px; border-radius: 50%; }
 .dropdown { position: relative; display: inline-block; }
-.dropdown-content { display: none; position: absolute; background-color: #fff; min-width: 180px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); z-index: 1; right: 0; top: 100%; margin-top: 10px; border-radius: 8px; overflow: hidden; }
+
+/* Estilos do Dropdown - CORRIGIDO AQUI */
+.dropdown-content {
+    display: none; /* ESCONDIDO POR PADRÃO AGORA */
+    position: absolute;
+    background-color: #fff;
+    min-width: 180px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    z-index: 1;
+    right: 0;
+    top: 100%;
+    margin-top: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+}
 .dropdown-content a { color: #374151; padding: 12px 16px; text-decoration: none; display: block; font-size: 0.9rem; }
 .dropdown-content a:hover { background-color: #f3f4f6; }
 .dropdown-content hr { margin: 5px 0; border: 0; border-top: 1px solid #eee; }
-.dropdown:hover .dropdown-content { display: block; }
+
+/* NOVA REGRA: O menu só aparece quando a classe 'show' está presente no '.dropdown' */
+.dropdown.show .dropdown-content {
+    display: block;
+}
+
+/* REGRA REMOVIDA/COMENTADA: O menu NÃO abre mais no hover */
+/* .dropdown:hover .dropdown-content { display: block; } */ 
+
 .btn-logout { background-color: #ef4444; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: 500; transition: background-color 0.2s; }
 .btn-logout:hover { background-color: #dc2626; }
 
-/* ===== ESTILOS DO DASHBOARD ===== */
+/* ===== ESTILOS DO DASHBOARD - ALTERADO AQUI ===== */
 .dashboard-container {
     display: flex;
-    justify-content: center;
-    align-items: flex-start; /* <<< ALTERADO: Alinha o conteúdo ao topo */
-    padding: 40px 20px;
+    flex-direction: column;    /* Organiza os itens (tool-card, loading) em coluna */
+    justify-content: flex-start; /* <<< CHAVE: Alinha o conteúdo ao topo do container */
+    align-items: center;       /* Centra os itens horizontalmente (como o .tool-card) */
+    padding-top: 50px;         /* <<< AJUSTE AQUI: Espaçamento do cabeçalho */
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 40px;
 }
 .tool-card {
     width: 100%;
@@ -100,16 +125,10 @@ main {
 .footer-right p { margin: 0; font-size: 0.9rem; color: #9ca3af; }
 .support-button { background-color: #374155; color: #e5e7eb; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem; }
 
-/* Adiciona este código ao teu ficheiro style-app.css existente */
-
 /* --- Estilos para Feedback Interativo --- */
-
-/* A classe que o JavaScript usa para esconder/mostrar elementos */
 .hidden {
     display: none !important;
 }
-
-/* Estilo para a mensagem de "loading" */
 #loading {
     margin-top: 20px;
     padding: 15px;
@@ -121,26 +140,10 @@ main {
     font-weight: 500;
     transition: all 0.3s ease-in-out;
 }
-/* Adiciona este código ao final do teu ficheiro de estilos */
 
-/* --- Ajustes de Layout do Dashboard --- */
-
-/* Força o contentor principal a organizar os seus filhos
-  (o .tool-card e o #loading) em uma coluna vertical,
-  um em baixo do outro.
-*/
-.dashboard-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centra os itens horizontalmente */
-    padding: 20px;
-}
-
-/*
-  Garante que o cartão de ferramentas e a mensagem de loading
+/* Garante que o cartão de ferramentas e a mensagem de loading
   não excedam uma largura máxima, para um melhor aspeto em
-  ecrãs grandes.
-*/
+  ecrãs grandes. */
 .tool-card, #loading {
     width: 100%;
     max-width: 650px; /* Ajusta este valor conforme a tua preferência */
@@ -148,8 +151,8 @@ main {
 }
 
 /* Adiciona um espaçamento em cima da mensagem de loading
-  para separá-la visualmente do cartão de ferramentas.
-*/
+  para separá-la visualmente do cartão de ferramentas. */
+/* Esta regra já existia, a mantemos. */
 #loading {
     margin-top: 20px;
 }

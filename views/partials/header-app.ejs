@@ -21,6 +21,11 @@
                 <div class="dropdown-content">
                     <a href="/perfil">Perfil</a>
                     <a href="/assinatura">Assinatura</a>
+                    
+                    <% if (user && user.isAdmin === 1) { %>
+                        <hr style="margin: 5px 0; border: 0; border-top: 1px solid #eee;">
+                        <a href="/admin/dashboard" style="color: #ef4444; font-weight: bold;">Dashboard Admin</a> <% } %>
+
                     <hr style="margin: 5px 0; border: 0; border-top: 1px solid #eee;">
                     <a href="/logout">Sair</a>
                 </div>

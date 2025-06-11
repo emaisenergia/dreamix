@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Usuário - Dreamix Admin</title>
+    <link rel="stylesheet" href="/style-app.css">
+    <link rel="icon" href="/assets/logo-icone.jpg">
+    <style>
+        /* Estilos específicos para o formulário de edição de usuário */
+        .edit-user-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 50px 20px;
+            max-width: 700px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .edit-user-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 40px;
+            width: 100%;
+        }
+        .edit-user-card h1 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .edit-user-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #334155;
+            margin-top: 15px;
+        }
+        .edit-user-form input[type="text"],
+        .edit-user-form input[type="email"],
+        .edit-user-form select {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1rem;
+            border: 1px solid #ccd0d5;
+            border-radius: 6px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+        .edit-user-form .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+        .edit-user-form .checkbox-group input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2); /* Aumenta o tamanho do checkbox */
+        }
+        .edit-user-form .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+        .edit-user-form .app-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .edit-user-form .app-btn.primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .edit-user-form .app-btn.primary:hover {
+            background-color: #2563eb;
+        }
+        .edit-user-form .app-btn.secondary {
+            background-color: #e5e7eb;
+            color: #1f2937;
+        }
+        .edit-user-form .app-btn.secondary:hover {
+            background-color: #d1d5db;
+        }
+    </style>
+</head>
+<body class="app-body">
+    <%- include('partials/header-app') %>
+
+    <main class="edit-user-container">
+        <div class="edit-user-card">
+            <h1>Editar Usuário: <%= userToEdit.name %></h1>
+            <form action="/admin/users/edit/<%= userToEdit.id %>" method="POST" class="edit-user-form">
+                <label for="name">Nome:</label>
+                <input type="text" id="name" name="name" value="<%= userToEdit.name %>" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="<%= userToEdit.email %>" required>
+
+                <label for="subscription_level">Nível de Assinatura:</label>
+                <select id="subscription_level" name="subscription_level">
+                    <option value="Free" <%= userToEdit.subscription_level === 'Free' ? 'selected' : '' %>>Free</option>
+                    <option value="Basic" <%= userToEdit.subscription_level === 'Basic' ? 'selected' : '' %>>Basic</option>
+                    <option value="Premium" <%= userToEdit.subscription_level === 'Premium' ? 'selected' : '' %>>Premium</option>
+                </select>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="isAdmin" name="isAdmin" <%= userToEdit.isAdmin === 1 ? 'checked' : '' %>>
+                    <label for="isAdmin">É Administrador?</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="isActive" name="isActive" <%= userToEdit.isActive === 1 ? 'checked' : '' %>>
+                    <label for="isActive">Usuário Ativo (Pode Logar)?</label>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="app-btn primary">Salvar Alterações</button>
+                    <a href="/admin/dashboard#usuarios" class="app-btn secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <%- include('partials/footer-app') %>
+    <script src="/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - Dreamix</title>
+    <link rel="stylesheet" href="/style-app.css">
+    <link rel="icon" href="/assets/logo-icone.jpg">
+    <style>
+        /* Estilos específicos para a página de perfil */
+        .profile-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 40px;
+            margin-top: 50px; /* Ajusta o espaçamento do cabeçalho */
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .profile-card h1 {
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+        .profile-info {
+            text-align: left;
+            margin-top: 30px;
+        }
+        .profile-info p {
+            font-size: 1.1rem;
+            color: #4b5563;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .profile-info p strong {
+            color: #111827;
+            display: inline-block;
+            width: 80px; /* Alinha os dois pontos */
+        }
+        .profile-actions {
+            margin-top: 30px;
+        }
+        .profile-actions button {
+            background-color: #3b82f6;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .profile-actions button:hover {
+            background-color: #2563eb;
+        }
+
+        /* Container geral para centralizar o card, similar ao dashboard-container */
+        .page-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Alinha ao topo */
+            align-items: center; /* Centraliza horizontalmente */
+            padding: 50px 20px; /* Espaçamento do cabeçalho */
+        }
+    </style>
+</head>
+<body class="app-body">
+    <%- include('partials/header-app') %>
+
+    <main class="page-container">
+        <div class="profile-card">
+            <h1>Seu Perfil</h1>
+            <div class="profile-info">
+                <p><strong>Nome:</strong> <%= user.name %></p>
+                <p><strong>Email:</strong> <%= user.email %></p>
+            </div>
+            <div class="profile-actions">
+                <button onclick="alert('Funcionalidade de edição de perfil em breve!')">Editar Perfil</button>
+            </div>
+        </div>
+    </main>
+
+    <%- include('partials/footer-app') %>
+
+    <script src="/script.js"></script>
+</body>
+</html>

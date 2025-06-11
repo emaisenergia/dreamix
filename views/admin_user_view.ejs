@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizar Usuário: <%= userToView.name %> - Dreamix Admin</title>
+    <link rel="stylesheet" href="/style-app.css">
+    <link rel="icon" href="/assets/logo-icone.jpg">
+    <style>
+        /* Estilos específicos para a página de visualização de usuário */
+        .view-user-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 50px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .user-details-card, .user-history-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 40px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .user-details-card h1, .user-history-card h2 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .user-details-info {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .user-details-info p {
+            font-size: 1.1rem;
+            color: #4b5563;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .user-details-info p strong {
+            color: #111827;
+            display: inline-block;
+            width: 150px; /* Alinha os rótulos */
+        }
+        .user-details-info .user-is-admin {
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .user-details-info .user-is-blocked {
+            font-weight: bold;
+            color: #ef4444;
+        }
+        .user-details-actions {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .user-details-actions .app-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            background-color: #3b82f6;
+            color: white;
+            text-decoration: none;
+        }
+        .user-details-actions .app-btn:hover {
+            background-color: #2563eb;
+        }
+
+        /* Estilos para a tabela de histórico do usuário */
+        .user-history-card .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .user-history-card .history-table th, .user-history-card .history-table td {
+            border: 1px solid #e5e7eb;
+            padding: 10px 15px;
+            text-align: left;
+        }
+        .user-history-card .history-table th {
+            background-color: #f3f4f6;
+            font-weight: 600;
+            color: #4b5563;
+        }
+        .user-history-card .history-table td {
+            color: #6b7280;
+        }
+        .user-history-card .history-table tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+        .user-history-card .history-table tr:hover {
+            background-color: #f0f2f5;
+        }
+    </style>
+</head>
+<body class="app-body">
+    <%- include('partials/header-app') %>
+
+    <main class="view-user-container">
+        <div class="user-details-card">
+            <h1>Detalhes do Usuário: <%= userToView.name %></h1>
+            <div class="user-details-info">
+                <p><strong>ID:</strong> <%= userToView.id %></p>
+                <p><strong>Nome:</strong> <%= userToView.name %></p>
+                <p><strong>Email:</strong> <%= userToView.email %></p>
+                <p><strong>Admin:</strong> <span class="<%= userToView.isAdmin === 1 ? 'user-is-admin' : '' %>"><%= userToView.isAdmin === 1 ? 'Sim' : 'Não' %></span></p>
+                <p><strong>Assinatura:</strong> <%= userToView.subscription_level %></p>
+                <p><strong>Status:</strong> <span class="<%= userToView.isActive === 0 ? 'user-is-blocked' : '' %>"><%= userToView.isActive === 1 ? 'Ativo' : 'Bloqueado' %></span></p>
+            </div>
+            <div class="user-details-actions">
+                <a href="/admin/dashboard" class="app-btn">Voltar para Dashboard Admin</a>
+            </div>
+        </div>
+
+        <div class="user-history-card">
+            <h2>Histórico de Clonagem de <%= userToView.name %></h2>
+            <% if (userHistory && userHistory.length > 0) { %>
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>URL Original</th>
+                            <th>Processado Em</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% userHistory.forEach(item => { %>
+                            <tr>
+                                <td><a href="<%= item.original_url %>" target="_blank" rel="noopener noreferrer"><%= item.original_url %></a></td>
+                                <td><%= new Date(item.cloned_at).toLocaleDateString('pt-BR', { dateStyle: 'medium' }) %> <%= new Date(item.cloned_at).toLocaleTimeString('pt-BR', { timeStyle: 'short' }) %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <p>Este usuário não tem histórico de clonagem.</p>
+            <% } %>
+        </div>
+
+    </main>
+
+    <%- include('partials/footer-app') %>
+    <script src="/script.js"></script>
+</body>
+</html>
