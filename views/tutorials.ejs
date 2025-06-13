@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutoriais - Dreamix</title>
+    <link rel="stylesheet" href="/style-app.css">
+    <link rel="icon" href="/assets/logo-icone.jpg">
+    <style>
+        /* Estilos básicos para a página de tutoriais */
+        .tutorials-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 50px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .tutorials-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 40px;
+            width: 100%;
+            text-align: center;
+        }
+        .tutorials-card h1 {
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+        .tutorials-card p {
+            font-size: 1.1rem;
+            color: #4b5563;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .tutorials-list {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+        .tutorials-list li {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+            color: #3b82f6;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .tutorials-list li:hover {
+            background-color: #eef2ff;
+            border-color: #a7b7ff;
+        }
+        .tutorials-list li strong {
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body class="app-body">
+    <%- include('partials/header-app') %>
+
+    <main class="tutorials-container">
+        <div class="tutorials-card">
+            <h1>Tutoriais e Guias</h1>
+            <p>Aprenda a usar todas as funcionalidades do Dreamix com nossos tutoriais passo a passo.</p>
+            
+            <ul class="tutorials-list">
+                <li><strong>Tutorial 1:</strong> Como Clonar seu Primeiro Site</li>
+                <li><strong>Tutorial 2:</strong> Editando Conteúdo Visualmente com o GrapesJS</li>
+                <li><strong>Tutorial 3:</strong> Gerando um Tema WordPress: Primeiros Passos</li>
+                <li><strong>Tutorial 4:</strong> Gerenciando Usuários e Assinaturas (Para Administradores)</li>
+                <li><strong>Tutorial 5:</strong> Fluxo de Aprovação de Cadastro</li>
+                <li style="color: #6b7280;">(Mais tutoriais em breve!)</li>
+            </ul>
+        </div>
+    </main>
+
+    <%- include('partials/footer-app') %>
+    <script src="/script.js"></script>
+</body>
+</html>

@@ -5,82 +5,230 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dreamix - Editor de Página</title>
     <link rel="stylesheet" href="https://unpkg.com/grapesjs/dist/css/grapes.min.css">
+    <link rel="stylesheet" href="/style-app.css">
+    <link rel="icon" href="/assets/logo-icone.jpg">
+    
     <script src="https://unpkg.com/grapesjs"></script>
     <script src="https://unpkg.com/grapesjs-preset-webpage"></script>
     <style>
-        body, html { margin: 0; height: 100%; overflow: hidden; }
-        #gjs { height: 100vh; box-sizing: border-box; }
-        .gjs-cv-canvas { height: 100%; width: 100%; }
+        /* Estilos específicos para o layout do GrapesJS */
+        body, html { 
+            margin: 0; 
+            height: 100%; 
+            overflow: hidden; /* Evita scroll na janela principal */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* Fonte base */
+            color: #333;
+        }
+        
+        body {
+            padding-top: 64px; /* O editor-header tem 64px de altura e é fixo */
+        }
+
+        #gjs { 
+            height: calc(100vh - 64px); /* Altura total da viewport menos SÓ o cabeçalho do editor */
+            box-sizing: border-box; 
+            width: 100%;
+        }
+        .gjs-cv-canvas {
+            background-color: white; /* Garante fundo branco para o canvas */
+        }
+        /* Ajustes para o painel de ferramentas do GrapesJS */
+        .gjs-pn-views { /* Painel de blocos e componentes (lateral esquerda) */
+            top: 64px; /* Ajusta para ficar abaixo do cabeçalho */
+        }
+        .gjs-pn-commands { /* Barra de comandos superior */
+            top: 64px; /* Ajusta para ficar abaixo do cabeçalho */
+        }
+        .gjs-pn-panel { /* Painéis de estilo, camadas etc. (lateral direita) */
+            top: 64px; /* Ajusta para ficar abaixo do cabeçalho */
+        }
+        .gjs-cv-canvas__frames { /* Ajusta a posição do canvas */
+            padding-top: 0; /* Remove padding superior padrão do GrapesJS */
+        }
+
+        /* Estilos para o cabeçalho do editor (próprio do editor.ejs) */
+        .editor-header {
+            background-color: #fff;
+            padding: 10px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed; /* Fixa o cabeçalho no topo */
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000; /* Garante que fique acima de tudo */
+            box-sizing: border-box;
+            height: 64px; /* Altura do cabeçalho para padding-top do body */
+        }
+        .editor-header h1 {
+            font-size: 1.2rem;
+            color: #1f2937;
+            margin: 0;
+        }
+        .editor-header .back-btn {
+            background-color: #6b7280;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .editor-header .back-btn:hover {
+            background-color: #4b5563;
+        }
     </style>
 </head>
-<body>
+<body> 
+    <div class="editor-header">
+        <h1>Dreamix Editor</h1>
+        <a href="/" class="back-btn">Voltar para Dashboard</a>
+    </div>
+
     <div id="gjs"></div>
+
+    <textarea id="initial-html-content" style="display: none;"><%- htmlContent || '' %></textarea>
+    <textarea id="initial-css-content" style="display: none;"><%- cssContent || '' %></textarea>
+
     <script type="text/javascript">
-        // Inicializa o editor GrapesJS
-        const editor = grapesjs.init({
-            container: '#gjs',
-            storageManager: false, // Não vamos guardar o estado no localStorage
-            plugins: ['grapesjs-preset-webpage'],
-            pluginsOpts: {
-                'grapesjs-preset-webpage': {
-                    // Opções do plugin, se necessário
+        document.addEventListener('DOMContentLoaded', () => {
+            // Pega o HTML e CSS das textareas ocultas
+            const initialHtml = document.getElementById('initial-html-content').value;
+            const initialCss = document.getElementById('initial-css-content').value;
+
+            console.log("Conteúdo HTML recebido (do textarea):", initialHtml.substring(0, 50) + '...');
+            console.log("Conteúdo CSS recebido (do textarea):", initialCss.substring(0, 50) + '...');
+
+            // Inicializa o editor GrapesJS
+            const editor = grapesjs.init({
+                container: '#gjs',
+                height: 'auto', // A altura será controlada pelo CSS do #gjs
+                width: 'auto', // A largura será controlada pelo CSS do #gjs
+                storageManager: {
+                    type: null // Desabilita o armazenamento automático
+                },
+                assetManager: {
+                    assets: [], // Pode ser populado com imagens do site clonado futuramente
+                },
+                plugins: ['grapesjs-preset-webpage'],
+                pluginsOpts: {
+                    'grapesjs-preset-webpage': {
+                        // Opções do plugin, se necessário
+                    }
+                },
+                canvas: {
+                    // Injeta o CSS clonado diretamente no iframe do editor
+                    // Forma mais direta de injetar CSS dinamicamente
+                    styles: [
+                        `data:text/css;charset=utf-8,${encodeURIComponent(initialCss)}`
+                    ],
+                    scripts: [] 
+                },
+                panels: {
+                    defaults: [
+                        {
+                            id: 'basic-actions',
+                            el: '.gjs-pn-commands', // Painel de comandos superior
+                            buttons: [
+                                { id: 'undo', className: 'fa fa-undo', command: 'undo', attributes: { title: 'Desfazer' } },
+                                { id: 'redo', className: 'fa fa-repeat', command: 'redo', attributes: { title: 'Refazer' } }
+                            ]
+                        },
+                        {
+                            id: 'options',
+                            el: '.gjs-pn-commands', // Painel de comandos superior
+                            buttons: [
+                                { id: 'visibility', className: 'fa fa-eye', command: 'core:fullscreen', attributes: { title: 'Visualizar Tela Cheia' } }
+                            ],
+                        },
+                        {
+                            id: 'views',
+                            el: '.gjs-pn-views', // Painel lateral esquerdo
+                            buttons: [
+                                { id: 'open-blocks', className: 'fa fa-th-large', command: 'open-blocks', attributes: { title: 'Blocos' } },
+                                { id: 'open-layers', className: 'fa fa-bars', command: 'open-layers', attributes: { title: 'Camadas' } },
+                                { id: 'open-styles', className: 'fa fa-paint-brush', command: 'open-styles', attributes: { title: 'Estilos' } }
+                            ]
+                        }
+                    ]
+                },
+                blockManager: {
+                    appendTo: '.gjs-pn-views', // Blocos geralmente aparecem na sidebar esquerda
+                },
+                layerManager: {
+                    appendTo: '.gjs-pn-views', // Camadas geralmente aparecem na sidebar esquerda
+                },
+                styleManager: {
+                    appendTo: '.gjs-pn-views', // Estilos geralmente aparecem na sidebar esquerda
+                },
+                deviceManager: {
+                    devices: [
+                        { name: 'Desktop', width: '' },
+                        { name: 'Tablet', width: '768px', widthMedia: '992px' },
+                        { name: 'Mobile', width: '320px', widthMedia: '480px' },
+                    ]
                 }
-            }
-        });
+            });
 
-        // --- CORREÇÃO APLICADA AQUI ---
-        // Usamos JSON.stringify para passar o conteúdo de forma segura para o JavaScript.
-        // O EJS irá executar JSON.stringify no servidor e o resultado será uma string JavaScript válida.
-        const initialHtml = <%- JSON.stringify(htmlContent || '') %>;
-        const initialCss = <%- JSON.stringify(cssContent || '') %>;
+            // Carrega o HTML no editor depois que ele está inicializado
+            editor.setComponents(initialHtml);
+            
+            // O CSS já está sendo injetado via canvas.styles acima.
+            console.log("GrapesJS inicializado e conteúdo carregado.");
 
-        // Carrega o conteúdo no editor
-        editor.setComponents(initialHtml);
-        editor.setStyle(initialCss);
-        
-        // --- Lógica do Botão de Exportar (sem alterações) ---
-        editor.Panels.addButton('options', {
-            id: 'export-zip',
-            className: 'fa fa-download',
-            command: 'export-zip',
-            attributes: { title: 'Descarregar como ZIP' }
-        });
 
-        editor.Commands.add('export-zip', {
-            run: function(editor, sender) {
-                sender && sender.set('active', true);
-                alert('A preparar o seu ficheiro ZIP. Por favor, aguarde...');
-                
-                const html = editor.getHtml();
-                const css = editor.getCss();
+            // --- Lógica do Botão de Exportar ---
+            editor.Panels.addButton('options', { 
+                id: 'export-zip',
+                className: 'fa fa-download',
+                command: 'export-zip',
+                attributes: { title: 'Descarregar como ZIP' }
+            });
 
-                fetch('/exportar', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ html, css })
-                })
-                .then(res => {
-                    if (!res.ok) throw new Error('Falha ao gerar o ZIP no servidor.');
-                    return res.blob();
-                })
-                .then(blob => {
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'site_editado.zip';
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                    window.URL.revokeObjectURL(url);
-                    sender && sender.set('active', false);
-                })
-                .catch(err => {
-                    alert('Ocorreu um erro ao gerar o ZIP.');
-                    console.error(err);
-                    sender && sender.set('active', false);
-                });
-            }
-        });
+            editor.Commands.add('export-zip', {
+                run: function(editor, sender) {
+                    sender && sender.set('active', true); 
+
+                    const html = editor.getHtml(); 
+                    const css = editor.getCss();   
+
+                    alert('A preparar o seu ficheiro ZIP. Por favor, aguarde...');
+                    
+                    fetch('/exportar', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ html, css })
+                    })
+                    .then(res => {
+                        if (!res.ok) {
+                            return res.json().then(errorData => {
+                                throw new Error(errorData.error || 'Falha ao gerar o ZIP no servidor.');
+                            });
+                        }
+                        return res.blob(); 
+                    })
+                    .then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'site_editado.zip'; 
+                        document.body.appendChild(a);
+                        a.click(); 
+                        a.remove(); 
+                        window.URL.revokeObjectURL(url); 
+                        alert('Ficheiro ZIP gerado e descarregado com sucesso!');
+                        sender && sender.set('active', false); 
+                    })
+                    .catch(err => {
+                        alert(`Ocorreu um erro ao gerar o ZIP: ${err.message}`);
+                        console.error("Erro ao exportar ZIP:", err);
+                        sender && sender.set('active', false); 
+                    });
+                }
+            });
+        }); // Fim do DOMContentLoaded
     </script>
 </body>
 </html>

@@ -1,1007 +1,587 @@
 <!DOCTYPE html>
-
 <html lang="pt-br">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Dashboard do Administrador - Dreamix</title>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-<link rel="stylesheet" href="/style-app.css">
-
-<link rel="icon" href="/assets/logo-icone.jpg">
-
-<style>
-
-/* Estilos específicos para o Dashboard Admin */
-
-body { /* Garante que o body não tem scroll inesperado */
-
-overflow-x: hidden;
-
-}
-
-.admin-container {
-
-flex-grow: 1;
-
-display: flex; /* Usando Flexbox para o layout principal */
-
-flex-direction: column;
-
-justify-content: flex-start;
-
-align-items: center;
-
-padding: 50px 20px 20px; /* Espaçamento do cabeçalho */
-
-width: 100%;
-
-box-sizing: border-box;
-
-}
-
-.admin-container h1 {
-
-color: #1f2937;
-
-margin-bottom: 30px;
-
-text-align: center;
-
-width: 100%;
-
-max-width: 1400px; /* Alinha com a largura máxima do cabeçalho */
-
-}
-
-
-/* Estilo para o layout da barra lateral e conteúdo principal */
-
-.admin-layout {
-
-display: flex; /* Habilita Flexbox para a barra lateral e conteúdo */
-
-width: 100%;
-
-max-width: 1400px; /* Limita a largura do layout */
-
-gap: 30px; /* Espaço entre a sidebar e o conteúdo */
-
-align-items: flex-start; /* Alinha itens ao topo */
-
-}
-
-
-
-/* Estilo para a barra lateral */
-
-.admin-sidebar {
-
-flex-shrink: 0; /* Não permite que a sidebar encolha */
-
-width: 250px; /* Largura fixa da sidebar */
-
-background-color: #fff;
-
-border-radius: 8px;
-
-box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-
-padding: 20px;
-
-position: sticky; /* Sidebar fica fixa ao rolar */
-
-top: 100px; /* Ajuste para ficar abaixo do cabeçalho fixo */
-
-height: fit-content; /* Ajusta a altura ao conteúdo */
-
-}
-
-.admin-sidebar h3 {
-
-color: #1f2937;
-
-margin-top: 0;
-
-margin-bottom: 15px;
-
-padding-bottom: 10px;
-
-border-bottom: 1px solid #eee;
-
-}
-
-.admin-sidebar nav ul {
-
-list-style: none;
-
-padding: 0;
-
-margin: 0;
-
-}
-
-.admin-sidebar nav ul li {
-
-margin-bottom: 5px; /* Espaçamento menor entre itens */
-
-}
-
-.admin-sidebar nav ul li a {
-
-display: block;
-
-padding: 10px 15px;
-
-color: #4b5563;
-
-text-decoration: none;
-
-border-radius: 5px;
-
-transition: background-color 0.2s, color 0.2s;
-
-font-weight: 500;
-
-}
-
-.admin-sidebar nav ul li a:hover,
-
-.admin-sidebar nav ul li a.active { /* Classe 'active' para o item clicado */
-
-background-color: #e0e7ff; /* Um tom de azul claro para hover/active */
-
-color: #2563eb;
-
-}
-
-
-
-/* Estilo para a área de conteúdo principal */
-
-.admin-content {
-
-flex-grow: 1; /* Permite que o conteúdo ocupe o espaço restante */
-
-min-width: 0; /* Garante que o conteúdo pode encolher */
-
-}
-
-
-
-/* Esconder todas as seções de conteúdo por padrão */
-
-.admin-content-section {
-
-display: none; /* Esconde todas as seções por padrão */
-
-background-color: #fff;
-
-border-radius: 8px;
-
-box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-
-padding: 30px;
-
-margin-bottom: 40px; /* Espaçamento entre as seções quando visíveis */
-
-width: 100%;
-
-box-sizing: border-box;
-
-}
-
-/* Mostrar apenas a seção com a classe 'active' */
-
-.admin-content-section.active {
-
-display: block; /* Mostra a seção ativa */
-
-}
-
-
-
-
-
-/* Estilos das seções (já existentes e novas) */
-
-.admin-section h2 {
-
-color: #3b82f6;
-
-margin-top: 0;
-
-margin-bottom: 20px;
-
-border-bottom: 1px solid #eee;
-
-padding-bottom: 10px;
-
-}
-
-.admin-table {
-
-width: 100%;
-
-border-collapse: collapse;
-
-margin-top: 20px;
-
-}
-
-.admin-table th, .admin-table td {
-
-border: 1px solid #e5e7eb;
-
-padding: 12px 15px;
-
-text-align: left;
-
-}
-
-.admin-table th {
-
-background-color: #f3f4f6;
-
-font-weight: 600;
-
-color: #4b5563;
-
-}
-
-.admin-table td {
-
-color: #6b7280;
-
-}
-
-.admin-table tr:nth-child(even) {
-
-background-color: #fafafa;
-
-}
-
-.admin-table tr:hover {
-
-background-color: #f0f2f5;
-
-}
-
-.user-is-admin {
-
-font-weight: bold;
-
-color: #22c55e; /* Cor verde para admin */
-
-}
-
-.text-center {
-
-text-align: center;
-
-}
-
-.stats-grid {
-
-display: grid;
-
-grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-
-gap: 20px;
-
-margin-top: 20px;
-
-}
-
-.stat-card {
-
-background-color: #f9fafb;
-
-border-radius: 8px;
-
-padding: 20px;
-
-text-align: center;
-
-box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-
-}
-
-.stat-card .value {
-
-font-size: 2.5rem;
-
-font-weight: 700;
-
-color: #1f2937;
-
-}
-
-.stat-card .label {
-
-font-size: 1rem;
-
-color: #6b7280;
-
-margin-top: 5px;
-
-}
-
-.stat-card.subscription-stat {
-
-text-align: left;
-
-}
-
-.stat-card.subscription-stat .level {
-
-font-weight: bold;
-
-color: #3b82f6;
-
-font-size: 1.1rem;
-
-}
-
-.stat-card.subscription-stat .count {
-
-font-size: 1.8rem;
-
-font-weight: 600;
-
-color: #1f2937;
-
-}
-
-/* Ajustes para botões de ação na tabela (Tamanho consistente e ícones) */
-
-.admin-actions {
-
-display: flex;
-
-gap: 5px; /* Espaçamento menor entre os botões */
-
-justify-content: center;
-
-flex-wrap: wrap; /* Permite que os botões quebrem a linha em telas menores */
-
-padding-bottom: 5px;
-
-}
-
-.admin-actions .btn {
-
-height: 32px; /* Altura uniforme para TODOS os botões */
-
-padding: 0 8px; /* Padding interno para texto em botões */
-
-border: none;
-
-border-radius: 5px;
-
-cursor: pointer;
-
-font-size: 0.85rem; /* Fonte ligeiramente menor */
-
-font-weight: 500;
-
-text-decoration: none; /* <<< ADICIONADO: Remove sublinhado de links estilizados como botões */
-
-transition: background-color 0.2s;
-
-white-space: nowrap; /* Evita que o texto quebre dentro do botão */
-
-overflow: hidden; /* Esconde conteúdo que excede a largura */
-
-text-overflow: ellipsis; /* Adiciona '...' se o texto for cortado */
-
-
-display: inline-flex; /* Para centrar conteúdo (texto e/ou ícone) */
-
-align-items: center;
-
-justify-content: center;
-
-min-width: 32px; /* Garante que botões de ícone puro tenham um tamanho mínimo */
-
-}
-
-.admin-actions .btn-edit {
-
-background-color: #2563eb;
-
-color: white;
-
-}
-
-.admin-actions .btn-edit:hover {
-
-background-color: #1d4ed8;
-
-}
-
-.admin-actions .btn-delete {
-
-background-color: #ef4444;
-
-color: white;
-
-}
-
-.admin-actions .btn-delete:hover {
-
-background-color: #dc2626;
-
-}
-
-/* Estilos para botões de ação na tabela (outlines) */
-
-.admin-actions .btn-primary-outline {
-
-background-color: transparent;
-
-color: #3b82f6;
-
-border: 1px solid #3b82f6;
-
-}
-
-.admin-actions .btn-primary-outline:hover {
-
-background-color: #e0e7ff;
-
-}
-
-.admin-actions .btn-secondary-outline {
-
-background-color: transparent;
-
-color: #6b7280;
-
-border: 1px solid #6b7280;
-
-}
-
-.admin-actions .btn-secondary-outline:hover {
-
-background-color: #f3f4f6;
-
-}
-
-/* Estilo para botões que contêm apenas ícones (ou ícone + pouco texto) */
-
-.admin-actions .btn.btn-icon { /* Aplique esta classe a botões que devem ser quadrados com ícone */
-
-width: 32px; /* Largura fixa para botões de ícone puro */
-
-padding: 0; /* Remove padding extra para ícones */
-
-}
-
-.admin-actions .btn-icon i {
-
-font-size: 1rem; /* Tamanho do ícone */
-
-}
-
-
-
-/* Responsividade básica para telas menores */
-
-@media (max-width: 768px) {
-
-.admin-layout {
-
-flex-direction: column; /* Pilha a sidebar e o conteúdo em telas menores */
-
-align-items: center;
-
-gap: 20px;
-
-}
-
-.admin-sidebar {
-
-width: 100%;
-
-position: static; /* Remove sticky em telas pequenas */
-
-top: auto;
-
-}
-
-.admin-sidebar nav ul {
-
-display: flex; /* Transforma itens da sidebar em linha para telas pequenas */
-
-flex-wrap: wrap;
-
-justify-content: center;
-
-gap: 10px;
-
-}
-
-.admin-sidebar nav ul li {
-
-margin-bottom: 0;
-
-}
-
-.admin-sidebar nav ul li a {
-
-padding: 8px 12px;
-
-font-size: 0.9rem;
-
-}
-
-.admin-table {
-
-font-size: 0.85rem; /* Reduz fonte da tabela */
-
-}
-
-.admin-table th, .admin-table td {
-
-padding: 8px 10px;
-
-}
-
-.admin-actions .btn {
-
-padding: 6px 8px;
-
-font-size: 0.8rem;
-
-min-width: unset; /* Remove min-width em telas pequenas */
-
-height: 28px; /* Altura ajustada para mobile */
-
-}
-
-.admin-actions .btn.btn-icon { /* Ajustes para botões de ícone em mobile */
-
-width: 28px;
-
-height: 28px;
-
-font-size: 0.9rem;
-
-}
-
-}
-
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard do Administrador - Dreamix</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/style-app.css">
+    <link rel="icon" href="/assets/logo-icone.jpg">
+    <style>
+        /* Estilos específicos para o Dashboard Admin */
+        body { /* Garante que o body não tem scroll inesperado */
+            overflow-x: hidden;
+        }
+        .admin-container {
+            flex-grow: 1;
+            display: flex; /* Usando Flexbox para o layout principal */
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 50px 20px 20px; /* Espaçamento do cabeçalho */
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .admin-container h1 {
+            color: #1f2937;
+            margin-bottom: 30px;
+            text-align: center;
+            width: 100%;
+            max-width: 1400px; /* Alinha com a largura máxima do cabeçalho */
+        }
+        
+        /* Estilo para o layout da barra lateral e conteúdo principal */
+        .admin-layout {
+            display: flex; /* Habilita Flexbox para a barra lateral e conteúdo */
+            width: 100%;
+            max-width: 1400px; /* Limita a largura do layout */
+            gap: 30px; /* Espaço entre a sidebar e o conteúdo */
+            align-items: flex-start; /* Alinha itens ao topo */
+        }
+
+        /* Estilo para a barra lateral */
+        .admin-sidebar {
+            flex-shrink: 0; /* Não permite que a sidebar encolha */
+            width: 250px; /* Largura fixa da sidebar */
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 20px;
+            position: sticky; /* Sidebar fica fixa ao rolar */
+            top: 100px; /* Ajuste para ficar abaixo do cabeçalho fixo */
+            height: fit-content; /* Ajusta a altura ao conteúdo */
+        }
+        .admin-sidebar h3 {
+            color: #1f2937;
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .admin-sidebar nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .admin-sidebar nav ul li {
+            margin-bottom: 5px; /* Espaçamento menor entre itens */
+        }
+        .admin-sidebar nav ul li a {
+            display: block;
+            padding: 10px 15px;
+            color: #4b5563;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.2s, color 0.2s;
+            font-weight: 500;
+        }
+        .admin-sidebar nav ul li a:hover,
+        .admin-sidebar nav ul li a.active { /* Classe 'active' para o item clicado */
+            background-color: #e0e7ff; /* Um tom de azul claro para hover/active */
+            color: #2563eb;
+        }
+
+        /* Estilo para a área de conteúdo principal */
+        .admin-content {
+            flex-grow: 1; /* Permite que o conteúdo ocupe o espaço restante */
+            min-width: 0; /* Garante que o conteúdo pode encolher */
+        }
+
+        /* Esconder todas as seções de conteúdo por padrão */
+        .admin-content-section {
+            display: none; /* Esconde todas as seções por padrão */
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin-bottom: 40px; /* Espaçamento entre as seções quando visíveis */
+            width: 100%;
+            box-sizing: border-box;
+        }
+        /* Mostrar apenas a seção com a classe 'active' */
+        .admin-content-section.active {
+            display: block; /* Mostra a seção ativa */
+        }
+
+
+        /* Estilos das seções (já existentes e novas) */
+        .admin-section h2 { 
+            color: #3b82f6;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .admin-table th, .admin-table td {
+            border: 1px solid #e5e7eb;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        .admin-table th {
+            background-color: #f3f4f6;
+            font-weight: 600;
+            color: #4b5563;
+        }
+        .admin-table td {
+            color: #6b7280;
+        }
+        .admin-table tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+        .admin-table tr:hover {
+            background-color: #f0f2f5;
+        }
+        .user-is-admin {
+            font-weight: bold;
+            color: #22c55e; /* Cor verde para admin */
+        }
+        .text-center {
+            text-align: center;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .stat-card {
+            background-color: #f9fafb;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+        .stat-card .label {
+            font-size: 1rem;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+        .stat-card.subscription-stat {
+            text-align: left;
+        }
+        .stat-card.subscription-stat .level {
+            font-weight: bold;
+            color: #3b82f6;
+            font-size: 1.1rem;
+        }
+        .stat-card.subscription-stat .count {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        /* Ajustes para botões de ação na tabela (Tamanho consistente e ícones) */
+        .admin-actions {
+            display: flex;
+            gap: 5px; /* Espaçamento menor entre os botões */
+            justify-content: center;
+            flex-wrap: wrap; /* Permite que os botões quebrem a linha em telas menores */
+            padding-bottom: 5px; 
+        }
+        .admin-actions .btn {
+            height: 32px; /* Altura uniforme para TODOS os botões */
+            padding: 0 8px; /* Padding interno para texto em botões */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem; /* Fonte ligeiramente menor */
+            font-weight: 500;
+            text-decoration: none; /* REMOVE SUBLINHADO DE LINKS ESTILIZADOS COMO BOTÕES */
+            transition: background-color 0.2s;
+            white-space: nowrap; /* Evita que o texto quebre dentro do botão */
+            overflow: hidden; /* Esconde conteúdo que excede a largura */
+            text-overflow: ellipsis; /* Adiciona '...' se o texto for cortado */
+            
+            display: inline-flex; /* Para centrar conteúdo (texto e/ou ícone) */
+            align-items: center;
+            justify-content: center;
+            min-width: 32px; /* Garante que botões de ícone puro tenham um tamanho mínimo */
+        }
+        .admin-actions .btn-edit {
+            background-color: #2563eb;
+            color: white;
+        }
+        .admin-actions .btn-edit:hover {
+            background-color: #1d4ed8;
+        }
+        .admin-actions .btn-delete {
+            background-color: #ef4444;
+            color: white;
+        }
+        .admin-actions .btn-delete:hover {
+            background-color: #dc2626;
+        }
+        /* Estilos para botões de ação na tabela (outlines) */
+        .admin-actions .btn-primary-outline {
+            background-color: transparent;
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+        }
+        .admin-actions .btn-primary-outline:hover {
+            background-color: #e0e7ff;
+        }
+        .admin-actions .btn-secondary-outline { 
+            background-color: transparent;
+            color: #6b7280;
+            border: 1px solid #6b7280;
+        }
+        .admin-actions .btn-secondary-outline:hover {
+            background-color: #f3f4f6;
+        }
+        /* Estilo para botões que contêm apenas ícones (ou ícone + pouco texto) */
+        .admin-actions .btn.btn-icon { /* Aplique esta classe a botões que devem ser quadrados com ícone */
+            width: 32px; /* Largura fixa para botões de ícone puro */
+            padding: 0; /* Remove padding extra para ícones */
+        }
+        .admin-actions .btn-icon i {
+            font-size: 1rem; /* Tamanho do ícone */
+        }
+        /* Novos estilos para o botão de aprovação e rejeição */
+        .admin-actions .btn-approve {
+            background-color: #22c55e; /* Verde para aprovar */
+            color: white;
+        }
+        .admin-actions .btn-approve:hover {
+            background-color: #16a34a;
+        }
+        .admin-actions .btn-reject {
+            background-color: #ef4444; /* Vermelho para rejeitar/excluir */
+            color: white;
+        }
+        .admin-actions .btn-reject:hover {
+            background-color: #dc2626;
+        }
+
+
+        /* Responsividade básica para telas menores */
+        @media (max-width: 768px) {
+            .admin-layout {
+                flex-direction: column; /* Pilha a sidebar e o conteúdo em telas menores */
+                align-items: center;
+                gap: 20px;
+            }
+            .admin-sidebar {
+                width: 100%;
+                position: static; /* Remove sticky em telas pequenas */
+                top: auto;
+            }
+            .admin-sidebar nav ul {
+                display: flex; /* Transforma itens da sidebar em linha para telas pequenas */
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+            .admin-sidebar nav ul li {
+                margin-bottom: 0;
+            }
+            .admin-sidebar nav ul li a {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+            .admin-table {
+                font-size: 0.85rem; /* Reduz fonte da tabela */
+            }
+            .admin-table th, .admin-table td {
+                padding: 8px 10px;
+            }
+            .admin-actions .btn {
+                padding: 6px 8px;
+                font-size: 0.8rem;
+                min-width: unset; /* Remove min-width em telas pequenas */
+                height: 28px; /* Altura ajustada para mobile */
+            }
+            .admin-actions .btn.btn-icon { /* Ajustes para botões de ícone em mobile */
+                width: 28px;
+                height: 28px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
-
 <body class="app-body">
-
-<%- include('partials/header-app') %>
-
-
-
-<main class="admin-container">
-
-<h1>Dashboard do Administrador</h1>
-
-
-
-<div class="admin-layout">
-
-<aside class="admin-sidebar">
-
-<h3>Navegação Admin</h3>
-
-<nav>
-
-<ul>
-
-<li><a href="#" class="sidebar-link active" data-target="estatisticas">Estatísticas Gerais</a></li>
-
-<li><a href="#" class="sidebar-link" data-target="usuarios">Usuários</a></li>
-
-<li><a href="#" class="sidebar-link" data-target="historico">Histórico</a></li>
-
-<li><a href="#" class="sidebar-link" data-target="assinaturas">Assinaturas</a></li>
-
-</ul>
-
-</nav>
-
-</aside>
-
-
-
-<div class="admin-content">
-
-
-
-<div id="estatisticas" class="admin-content-section active"> <h2>Estatísticas Gerais</h2>
-
-<div class="stats-grid">
-
-<div class="stat-card">
-
-<div class="value"><%= stats.userCount %></div>
-
-<div class="label">Total de Usuários</div>
-
-</div>
-
-<div class="stat-card">
-
-<div class="value"><%= stats.cloneCount %></div>
-
-<div class="label">Total de Clonagens</div>
-
-</div>
-
-<% for (const level in stats.subscriptionCounts) { %>
-
-<div class="stat-card subscription-stat">
-
-<div class="level"><%= level %></div>
-
-<div class="count"><%= stats.subscriptionCounts[level] %></div>
-
-<div class="label">Usuários no Plano</div>
-
-</div>
-
-<% } %>
-
-</div>
-
-</div>
-
-
-
-<div id="usuarios" class="admin-content-section">
-
-<h2>Todos os Usuários</h2>
-
-<div style="margin-bottom: 20px; text-align: right;">
-
-<a href="/admin/users/add" class="app-btn primary">Cadastrar Novo Usuário</a>
-
-</div>
-
-<% if (users && users.length > 0) { %>
-
-<table class="admin-table">
-
-<thead>
-
-<tr>
-
-<th>ID</th>
-
-<th>Nome</th>
-
-<th>Email</th>
-
-<th>Admin?</th>
-
-<th>Assinatura</th>
-
-<th>Status</th>
-
-<th>Ações</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-<% users.forEach(user => { %>
-
-<tr>
-
-<td><%= user.id %></td>
-
-<td><%= user.name %></td>
-
-<td><%= user.email %></td>
-
-<td class="text-center <%= user.isAdmin === 1 ? 'user-is-admin' : '' %>">
-
-<%= user.isAdmin === 1 ? 'Sim' : 'Não' %>
-
-</td>
-
-<td><%= user.subscription_level %></td>
-
-<td class="text-center">
-
-<%= user.isActive === 1 ? 'Ativo' : 'Bloqueado' %>
-
-</td>
-
-<td class="admin-actions">
-
-<a href="/admin/users/view/<%= user.id %>" class="btn btn-primary-outline btn-icon" title="Visualizar Detalhes">
-
-<i class="fas fa-eye"></i>
-
-</a>
-
-<a href="/admin/users/view/<%= user.id %>#history" class="btn btn-secondary-outline btn-icon" title="Ver Histórico">
-
-<i class="fas fa-history"></i>
-
-</a>
-
-<form action="/admin/users/toggle-status/<%= user.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja <%= user.isActive === 1 ? 'BLOQUEAR' : 'LIBERAR' %> este usuário?');">
-
-<input type="hidden" name="currentStatus" value="<%= user.isActive %>">
-
-<button type="submit" class="btn <%= user.isActive === 1 ? 'btn-delete' : 'btn-edit' %> btn-icon" title="<%= user.isActive === 1 ? 'Bloquear Usuário' : 'Liberar Usuário' %>">
-
-<i class="fas <%= user.isActive === 1 ? 'fa-user-lock' : 'fa-user-check' %>"></i>
-
-</button>
-
-</form>
-
-<a href="/admin/users/edit/<%= user.id %>" class="btn btn-edit btn-icon" title="Editar Usuário">
-
-<i class="fas fa-edit"></i>
-
-</a>
-
-<form action="/admin/users/delete/<%= user.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja EXCLUIR este usuário? TODO o histórico dele será removido.');">
-
-<button type="submit" class="btn btn-delete btn-icon" title="Excluir Usuário">
-
-<i class="fas fa-trash-alt"></i>
-
-</button>
-
-</form>
-
-</td>
-
-</tr>
-
-<% }) %>
-
-</tbody>
-
-</table>
-
-<% } else { %>
-
-<p>Nenhum usuário encontrado.</p>
-
-<% } %>
-
-</div>
-
-
-
-<div id="historico" class="admin-content-section">
-
-<h2>Histórico Completo de Clonagem</h2>
-
-<% if (history && history.length > 0) { %>
-
-<table class="admin-table">
-
-<thead>
-
-<tr>
-
-<th>URL Original</th>
-
-<th>Usuário</th>
-
-<th>Processado Em</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-<% history.forEach(item => { %>
-
-<tr>
-
-<td><a href="<%= item.original_url %>" target="_blank" rel="noopener noreferrer"><%= item.original_url %></a></td>
-
-<td><%= item.user_email || 'Desconhecido' %></td>
-
-<td><%= new Date(item.cloned_at).toLocaleDateString('pt-BR', { dateStyle: 'medium' }) %> <%= new Date(item.cloned_at).toLocaleTimeString('pt-BR', { timeStyle: 'short' }) %></td>
-
-</tr>
-
-<% }) %>
-
-</tbody>
-
-</table>
-
-<% } else { %>
-
-<p>Nenhum histórico de clonagem encontrado.</p>
-
-<% } %>
-
-</div>
-
-
-
-<div id="assinaturas" class="admin-content-section">
-
-<h2>Visão Geral de Assinaturas</h2>
-
-<p>Aqui você pode ver um resumo dos níveis de assinatura. Para gerenciar assinaturas individuais, edite o usuário na seção "Usuários".</p>
-
-<div class="stats-grid">
-
-<% if (stats.subscriptionCounts && Object.keys(stats.subscriptionCounts).length > 0) { %>
-
-<% for (const level in stats.subscriptionCounts) { %>
-
-<div class="stat-card subscription-stat">
-
-<div class="level"><%= level %></div>
-
-<div class="count"><%= stats.subscriptionCounts[level] %></div>
-
-<div class="label">Usuários no Plano</div>
-
-</div>
-
-<% } %>
-
-<% } else { %>
-
-<p>Nenhum dado de assinatura encontrado.</p>
-
-<% } %>
-
-</div>
-
-</div>
-
-
-
-</div> </div> </main>
-
-
-
-<%- include('partials/footer-app') %>
-
-
-<script>
-
-document.addEventListener('DOMContentLoaded', () => {
-
-const sidebarLinks = document.querySelectorAll('.admin-sidebar .sidebar-link');
-
-const contentSections = document.querySelectorAll('.admin-content-section');
-
-
-
-// Função para mostrar a seção correta
-
-function showSection(targetId) {
-
-// Esconde todas as seções de conteúdo
-
-contentSections.forEach(section => {
-
-section.classList.remove('active');
-
-});
-
-
-
-// Mostra a seção alvo
-
-const targetSection = document.getElementById(targetId);
-
-if (targetSection) {
-
-targetSection.classList.add('active');
-
-// Scroll para o topo da seção se for necessário
-
-// targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-}
-
-}
-
-
-
-// Função para gerenciar a classe 'active' nos links da sidebar
-
-function setActiveLink(clickedLink) {
-
-sidebarLinks.forEach(link => {
-
-link.classList.remove('active');
-
-});
-
-clickedLink.classList.add('active');
-
-}
-
-
-
-// Adiciona ouvintes de evento aos links da sidebar
-
-sidebarLinks.forEach(link => {
-
-link.addEventListener('click', (event) => {
-
-event.preventDefault(); // Impede o comportamento padrão do link (scroll para o ID)
-
-const targetId = link.dataset.target; // Pega o ID da seção alvo do atributo data-target
-
-
-showSection(targetId); // Mostra a seção correspondente
-
-setActiveLink(link); // Ativa o link na sidebar
-
-});
-
-});
-
-
-
-// Lógica para inicializar a página: mostra a seção baseada na URL ou a primeira seção
-
-const hash = window.location.hash.substring(1); // Pega o hash da URL (ex: #usuarios -> "usuarios")
-
-if (hash && document.getElementById(hash)) {
-
-// Se existe um hash na URL e a seção correspondente, mostra ela
-
-showSection(hash);
-
-// Ativa o link correspondente na sidebar
-
-const initialActiveLink = document.querySelector(`.sidebar-link[data-target="${hash}"]`);
-
-if (initialActiveLink) {
-
-setActiveLink(initialActiveLink);
-
-}
-
-} else {
-
-// Caso contrário, mostra a primeira seção por padrão (Estatísticas Gerais)
-
-if (sidebarLinks.length > 0) {
-
-sidebarLinks[0].click(); // Simula um clique no primeiro link para ativá-lo
-
-}
-
-}
-
-});
-
-</script>
-
-
-
-<script src="/script.js"></script>
-
+    <%- include('partials/header-app') %>
+
+    <main class="admin-container">
+        <h1>Dashboard do Administrador</h1>
+
+        <div class="admin-layout">
+            <aside class="admin-sidebar">
+                <h3>Navegação Admin</h3>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="sidebar-link active" data-target="estatisticas">Estatísticas Gerais</a></li>
+                        <li><a href="#" class="sidebar-link" data-target="usuarios">Usuários</a></li>
+                        <li><a href="#" class="sidebar-link" data-target="historico">Histórico</a></li>
+                        <li><a href="#" class="sidebar-link" data-target="assinaturas">Assinaturas</a></li>
+                        <li>
+                            <a href="#" class="sidebar-link" data-target="cadastros-pendentes">
+                                Cadastros Pendentes
+                                <% if (stats.pendingUsersCount > 0) { %>
+                                    <span class="badge"><%= stats.pendingUsersCount %></span>
+                                <% } %>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <div class="admin-content">
+
+                <div id="estatisticas" class="admin-content-section active"> <h2>Estatísticas Gerais</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="value"><%= stats.userCount %></div>
+                            <div class="label">Total de Usuários</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="value"><%= stats.cloneCount %></div>
+                            <div class="label">Total de Clonagens</div>
+                        </div>
+                        <% for (const level in stats.subscriptionCounts) { %>
+                            <div class="stat-card subscription-stat">
+                                <div class="level"><%= level %></div>
+                                <div class="count"><%= stats.subscriptionCounts[level] %></div>
+                                <div class="label">Usuários no Plano</div>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+
+                <div id="usuarios" class="admin-content-section">
+                    <h2>Todos os Usuários</h2>
+                    <div style="margin-bottom: 20px; text-align: right;">
+                        <a href="/admin/users/add" class="app-btn primary">Cadastrar Novo Usuário</a>
+                    </div>
+                    <% if (users && users.length > 0) { %>
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Admin?</th>
+                                    <th>Assinatura</th>
+                                    <th>Status</th> 
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% users.forEach(user => { %>
+                                    <tr>
+                                        <td><%= user.id %></td>
+                                        <td><%= user.name %></td>
+                                        <td><%= user.email %></td>
+                                        <td class="text-center <%= user.isAdmin === 1 ? 'user-is-admin' : '' %>">
+                                            <%= user.isAdmin === 1 ? 'Sim' : 'Não' %>
+                                        </td>
+                                        <td><%= user.subscription_level %></td>
+                                        <td class="text-center">
+                                            <%= user.isActive === 1 ? 'Ativo' : 'Bloqueado' %>
+                                        </td>
+                                        <td class="admin-actions">
+                                            <a href="/admin/users/view/<%= user.id %>" class="btn btn-primary-outline btn-icon" title="Visualizar Detalhes">
+                                                <i class="fas fa-eye"></i> 
+                                            </a>
+                                            <a href="/admin/users/view/<%= user.id %>#history" class="btn btn-secondary-outline btn-icon" title="Ver Histórico">
+                                                <i class="fas fa-history"></i> 
+                                            </a>
+                                            <form action="/admin/users/toggle-status/<%= user.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja <%= user.isActive === 1 ? 'BLOQUEAR' : 'LIBERAR' %> este usuário?');">
+                                                <input type="hidden" name="currentStatus" value="<%= user.isActive %>">
+                                                <button type="submit" class="btn <%= user.isActive === 1 ? 'btn-delete' : 'btn-edit' %> btn-icon" title="<%= user.isActive === 1 ? 'Bloquear Usuário' : 'Liberar Usuário' %>">
+                                                    <i class="fas <%= user.isActive === 1 ? 'fa-user-lock' : 'fa-user-check' %>"></i> 
+                                                </button>
+                                            </form>
+                                            <a href="/admin/users/edit/<%= user.id %>" class="btn btn-edit btn-icon" title="Editar Usuário">
+                                                <i class="fas fa-edit"></i> 
+                                            </a>
+                                            <form action="/admin/users/delete/<%= user.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja EXCLUIR este usuário? TODO o histórico dele será removido.');">
+                                                <button type="submit" class="btn btn-delete btn-icon" title="Excluir Usuário">
+                                                    <i class="fas fa-trash-alt"></i> 
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    <% } else { %>
+                        <p>Nenhum usuário encontrado.</p>
+                    <% } %>
+                </div>
+
+                <div id="historico" class="admin-content-section">
+                    <h2>Histórico Completo de Clonagem</h2>
+                    <% if (history && history.length > 0) { %>
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>URL Original</th>
+                                    <th>Usuário</th>
+                                    <th>Processado Em</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% history.forEach(item => { %>
+                                    <tr>
+                                        <td><a href="<%= item.original_url %>" target="_blank" rel="noopener noreferrer"><%= item.original_url %></a></td>
+                                        <td><%= item.user_email || 'Desconhecido' %></td>
+                                        <td><%= new Date(item.cloned_at).toLocaleDateString('pt-BR', { dateStyle: 'medium' }) %> <%= new Date(item.cloned_at).toLocaleTimeString('pt-BR', { timeStyle: 'short' }) %></td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    <% } else { %>
+                        <p>Nenhum histórico de clonagem encontrado.</p>
+                    <% } %>
+                </div>
+
+                <div id="assinaturas" class="admin-content-section">
+                    <h2>Visão Geral de Assinaturas</h2>
+                    <p>Aqui você pode ver um resumo dos níveis de assinatura. Para gerenciar assinaturas individuais, edite o usuário na seção "Usuários".</p>
+                    <div class="stats-grid">
+                        <% if (stats.subscriptionCounts && Object.keys(stats.subscriptionCounts).length > 0) { %>
+                            <% for (const level in stats.subscriptionCounts) { %>
+                                <div class="stat-card subscription-stat">
+                                    <div class="level"><%= level %></div>
+                                    <div class="count"><%= stats.subscriptionCounts[level] %></div>
+                                    <div class="label">Usuários no Plano</div>
+                                </div>
+                            <% } %>
+                        <% } else { %>
+                            <p>Nenhum dado de assinatura encontrado.</p>
+                        <% } %>
+                    </div>
+                </div>
+
+                <div id="cadastros-pendentes" class="admin-content-section">
+                    <h2>Cadastros Pendentes</h2>
+                    <p>Aqui estão os usuários que se registraram e aguardam sua aprovação.</p>
+                    <% 
+                    const pendingUsers = users.filter(user => user.isActive === 0);
+                    %>
+                    <% if (pendingUsers.length > 0) { %>
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>WhatsApp</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% pendingUsers.forEach(user => { %>
+                                    <tr>
+                                        <td><%= user.id %></td>
+                                        <td><%= user.name %></td>
+                                        <td><%= user.email %></td>
+                                        <td>
+                                            <% if (user.whatsapp_number) { %>
+                                                <a href="https://wa.me/<%= user.whatsapp_number %>" target="_blank" rel="noopener noreferrer" title="Contatar via WhatsApp">
+                                                    <%= user.whatsapp_number %> <i class="fab fa-whatsapp" style="color: #25D366; margin-left: 5px;"></i>
+                                                </a>
+                                            <% } else { %>
+                                                N/A
+                                            <% } %>
+                                        </td>
+                                        <td class="admin-actions">
+                                            <form action="/admin/users/toggle-status/<%= user.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja APROVAR este usuário?');">
+                                                <input type="hidden" name="currentStatus" value="<%= user.isActive %>">
+                                                <button type="submit" class="btn btn-approve btn-icon" title="Aprovar Conta">
+                                                    <i class="fas fa-check"></i> 
+                                                </button>
+                                            </form>
+                                            <a href="/admin/users/edit/<%= user.id %>" class="btn btn-primary-outline btn-icon" title="Editar Usuário">
+                                                <i class="fas fa-pencil-alt"></i> 
+                                            </a>
+                                            <form action="/admin/users/delete/<%= user.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja REJEITAR/EXCLUIR este usuário?');">
+                                                <button type="submit" class="btn btn-reject btn-icon" title="Rejeitar/Excluir Usuário">
+                                                    <i class="fas fa-times"></i> 
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    <% } else { %>
+                        <p>Nenhum cadastro pendente no momento.</p>
+                    <% } %>
+                </div>
+
+            </div> </div> </main>
+
+    <%- include('partials/footer-app') %>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebarLinks = document.querySelectorAll('.admin-sidebar .sidebar-link');
+            const contentSections = document.querySelectorAll('.admin-content-section');
+
+            // Função para mostrar a seção correta
+            function showSection(targetId) {
+                // Esconde todas as seções de conteúdo
+                contentSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+
+                // Mostra a seção alvo
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                    // Scroll para o topo da seção se for necessário
+                    // targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+
+            // Função para gerenciar a classe 'active' nos links da sidebar
+            function setActiveLink(clickedLink) {
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                });
+                clickedLink.classList.add('active');
+            }
+
+            // Adiciona ouvintes de evento aos links da sidebar
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault(); // Impede o comportamento padrão do link (scroll para o ID)
+                    const targetId = link.dataset.target; // Pega o ID da seção alvo do atributo data-target
+                    
+                    showSection(targetId); // Mostra a seção correspondente
+                    setActiveLink(link);   // Ativa o link na sidebar
+                });
+            });
+
+            // Lógica para inicializar a página: mostra a seção baseada na URL ou a primeira seção
+            const hash = window.location.hash.substring(1); // Pega o hash da URL (ex: #usuarios -> "usuarios")
+            if (hash && document.getElementById(hash)) {
+                // Se existe um hash na URL e a seção correspondente, mostra ela
+                showSection(hash);
+                // Ativa o link correspondente na sidebar
+                const initialActiveLink = document.querySelector(`.sidebar-link[data-target="${hash}"]`);
+                if (initialActiveLink) {
+                    setActiveLink(initialActiveLink);
+                }
+            } else {
+                // Caso contrário, mostra a primeira seção por padrão (Estatísticas Gerais)
+                if (sidebarLinks.length > 0) {
+                    sidebarLinks[0].click(); // Simula um clique no primeiro link para ativá-lo
+                }
+            }
+        });
+    </script>
+
+    <script src="/script.js"></script>
 </body>
-
 </html>

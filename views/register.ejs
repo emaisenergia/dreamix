@@ -1,17 +1,191 @@
-<!DOCTYPE html><html lang="pt-br"><head><meta charset="UTF-8"><title>Criar Conta - Dreamix</title><link rel="stylesheet" href="/style-auth.css"></head><body>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Conta - Dreamix</title>
+    <link rel="stylesheet" href="/style-auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Estilos da página de registro (baseados no seu style-auth.css, com ajustes aqui) */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f7f6;
+            font-family: -apple-system, BlinkMacMacFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #333;
+        }
+        .auth-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            max-width: 450px; /* Aumenta um pouco para caber mais campos */
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .auth-logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #4b5563;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+        .toast {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+        .toast.error {
+            background-color: #fef2f2;
+            color: #ef4444;
+            border: 1px solid #fecaca;
+        }
+        .auth-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #334155;
+            margin-top: 15px; /* Espaçamento entre campos */
+        }
+        .auth-form input[type="text"],
+        .auth-form input[type="email"],
+        .auth-form input[type="password"],
+        .auth-form input[type="tel"] { /* Novo tipo tel para WhatsApp */
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1rem;
+            border: 1px solid #ccd0d5;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        .auth-form .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            margin-top: 30px; /* Espaçamento maior para o botão de submit */
+        }
+        .auth-form .btn:hover {
+            background-color: #2563eb;
+        }
+        .auth-link {
+            display: block;
+            margin-top: 25px;
+            color: #4b5563;
+            font-size: 0.95rem;
+        }
+        .auth-link a {
+            color: #3b82f6;
+            font-weight: 500;
+            text-decoration: none;
+        }
+        .auth-link a:hover {
+            text-decoration: underline;
+        }
+        /* Estilo para a mensagem de erro de validação */
+        .validation-error {
+            color: #ef4444;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: block;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
     <div class="auth-container">
         <a href="/"><img src="/assets/logo-completo.jpg" alt="Logotipo Dreamix" class="auth-logo"></a>
         <h2>Crie a sua conta Dreamix</h2>
         <p>Comece em segundos e liberte o seu potencial.</p>
-        <% if (error) { %><div class="toast error"><%= error %></div><% } %>
-        <form action="/registo" method="POST" class="auth-form">
+        <% if (error) { %>
+            <div class="toast error"><%= error %></div>
+        <% } %>
+        <form action="/registo" method="POST" class="auth-form" id="registerForm">
             <label for="name">Nome Completo</label>
             <input type="text" id="name" name="name" required>
+
             <label for="email">Email</label>
             <input type="email" id="email" name="email" required>
+
+            <label for="whatsapp_number">Número de WhatsApp (com DDD)</label>
+            <input type="tel" id="whatsapp_number" name="whatsapp_number" placeholder="Ex: 5545999998888" required>
+            <span class="validation-error" id="whatsappError"></span>
+
             <label for="password">Crie uma Senha</label>
             <input type="password" id="password" name="password" required>
+            <span class="validation-error" id="passwordError"></span>
+
+            <label for="confirm_password">Confirme sua Senha</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
+            <span class="validation-error" id="confirmPasswordError"></span>
+
             <button type="submit" class="btn">Criar Conta</button>
         </form>
         <div class="auth-link">Já tem uma conta? <a href="/login">Faça o login</a>.</div>
-    </div></body></html>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('registerForm');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirm_password');
+            const whatsappInput = document.getElementById('whatsapp_number');
+            const passwordError = document.getElementById('passwordError');
+            const confirmPasswordError = document.getElementById('confirmPasswordError');
+            const whatsappError = document.getElementById('whatsappError');
+
+            form.addEventListener('submit', (event) => {
+                let isValid = true;
+
+                // Validação de Senha (mínimo 6 caracteres, pode adicionar mais regras aqui)
+                if (passwordInput.value.length < 6) {
+                    passwordError.textContent = 'A senha deve ter no mínimo 6 caracteres.';
+                    isValid = false;
+                } else {
+                    passwordError.textContent = '';
+                }
+
+                // Validação de Confirmação de Senha
+                if (passwordInput.value !== confirmPasswordInput.value) {
+                    confirmPasswordError.textContent = 'As senhas não coincidem.';
+                    isValid = false;
+                } else {
+                    confirmPasswordError.textContent = '';
+                }
+
+                // Validação de Número de WhatsApp (básico: apenas dígitos, pode ser mais robusto)
+                // Remove espaços e hífens para validação
+                const cleanedWhatsapp = whatsappInput.value.replace(/[\s-()]/g, '');
+                if (!/^\d+$/.test(cleanedWhatsapp) || cleanedWhatsapp.length < 10) { // Ex: mínimo 10 dígitos (DDD + número)
+                    whatsappError.textContent = 'Número de WhatsApp inválido. Apenas dígitos (com DDD).';
+                    isValid = false;
+                } else {
+                    whatsappError.textContent = '';
+                }
+
+                if (!isValid) {
+                    event.preventDefault(); // Impede o envio do formulário se a validação falhar
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -59,16 +59,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // --- Ações dos Botões Principais (LÓGICA DO DASHBOARD) ---
+
+        // ATUALIZADO: Botão "Editar" agora redireciona para a página do editor
         editBtn.addEventListener('click', () => {
-            alert('Funcionalidade de edição visual - Em breve!');
+            const url = urlInput.value.trim();
+            if (!url.startsWith('http')) {
+                alert('Por favor, insira um URL válido para editar.');
+                return;
+            }
+            // Redireciona para a rota /editar no servidor, passando a URL do site
+            window.location.href = `/editar?url=${encodeURIComponent(url)}`;
         });
 
+        // Botão "Baixar ZIP"
         downloadBtn.addEventListener('click', () => {
             const url = urlInput.value.trim();
             if (!url.startsWith('http')) { alert('Por favor, insira um URL válido.'); return; }
             downloadFile('/clonar-e-baixar', url, 'A clonar e a compactar o site...');
         });
 
+        // Botão para gerar o tema WordPress
         wpThemeBtn.addEventListener('click', () => {
             const url = urlInput.value.trim();
             if (!url.startsWith('http')) { alert('Por favor, insira um URL válido.'); return; }
