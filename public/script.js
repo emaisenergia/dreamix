@@ -1,4 +1,4 @@
-// public/script.js - Versão com inicialização condicional de funcionalidades
+// public/script.js - Versão com a funcionalidade "Em breve" para o botão Editar
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -11,14 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const loadingDiv = document.getElementById('loading');
 
         // Verifica se os elementos do dashboard existem nesta página
+        // Esta verificação continua a ser útil se esta script for usada noutras páginas
         if (!urlInput || !downloadBtn || !editBtn || !wpThemeBtn || !loadingDiv) {
             console.log("Elementos do Dashboard não encontrados nesta página. Pulando inicialização do Dashboard.");
-            return; // Sai da função se não for a página do Dashboard
+            return; 
         }
 
         console.log("Inicializando funcionalidades do Dashboard...");
 
-        // Mostra/esconde a div de loading e desativa/ativa os botões (LÓGICA DO DASHBOARD)
         function showLoading(isLoading, message = 'A processar...') {
             loadingDiv.textContent = message;
             loadingDiv.classList.toggle('hidden', !isLoading);
@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
             wpThemeBtn.disabled = isLoading;
         }
 
-        // Função para descarregar ficheiros ZIP (LÓGICA DO DASHBOARD)
         async function downloadFile(endpoint, url, loadingMessage) {
             showLoading(true, loadingMessage);
             try {
@@ -58,27 +57,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // --- Ações dos Botões Principais (LÓGICA DO DASHBOARD) ---
+        // --- Ações dos Botões Principais ---
 
-        // ATUALIZADO: Botão "Editar" agora redireciona para a página do editor
-        editBtn.addEventListener('click', () => {
-            const url = urlInput.value.trim();
-            if (!url.startsWith('http')) {
-                alert('Por favor, insira um URL válido para editar.');
-                return;
-            }
-            // Redireciona para a rota /editar no servidor, passando a URL do site
-            window.location.href = `/editar?url=${encodeURIComponent(url)}`;
+        // ############### ALTERAÇÃO AQUI ###############
+        // O botão "Editar" agora exibe uma mensagem de "Em breve" em vez de redirecionar.
+        editBtn.addEventListener('click', (event) => {
+            // Previne qualquer comportamento padrão que o botão possa ter.
+            event.preventDefault(); 
+            
+            // Exibe o alerta para o utilizador.
+            alert('Em breve: A funcionalidade de edição estará disponível numa futura atualização!');
         });
+        // ############################################
 
-        // Botão "Baixar ZIP"
+        // Botão "Baixar ZIP" (Funcionalidade mantida)
         downloadBtn.addEventListener('click', () => {
             const url = urlInput.value.trim();
             if (!url.startsWith('http')) { alert('Por favor, insira um URL válido.'); return; }
             downloadFile('/clonar-e-baixar', url, 'A clonar e a compactar o site...');
         });
 
-        // Botão para gerar o tema WordPress
+        // Botão para gerar o tema WordPress (Funcionalidade mantida)
         wpThemeBtn.addEventListener('click', () => {
             const url = urlInput.value.trim();
             if (!url.startsWith('http')) { alert('Por favor, insira um URL válido.'); return; }
@@ -91,31 +90,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const profileDropdown = document.querySelector('.dropdown');
         const profileButton = document.querySelector('.profile-button');
 
-        console.log('--- Inicializando Dropdown ---');
-        console.log('Elemento .dropdown:', profileDropdown);
-        console.log('Elemento .profile-button:', profileButton);
-        console.log('---------------------------');
-
-        // Verifica se os elementos do dropdown existem nesta página (devem existir em todas as páginas com cabeçalho)
         if (profileDropdown && profileButton) {
             profileButton.addEventListener('click', (event) => {
                 event.stopPropagation();
                 profileDropdown.classList.toggle('show');
-                console.log('Botão de perfil clicado. Classe "show" alternada.');
             });
 
             document.addEventListener('click', (event) => {
                 if (!profileDropdown.contains(event.target)) {
                     profileDropdown.classList.remove('show');
-                    console.log('Clicou fora do dropdown. Classe "show" removida.');
                 }
             });
         } else {
-            console.warn("Elementos do dropdown do perfil não encontrados (normal se esta página não tiver cabeçalho).");
+            console.warn("Elementos do dropdown do perfil não encontrados.");
         }
     }
 
-    // --- CHAMA AS FUNÇÕES DE INICIALIZAÇÃO NO DOMContentLoaded ---
-    initializeDashboardFeatures(); // Tenta inicializar as funcionalidades do Dashboard
-    initializeProfileDropdown();   // Tenta inicializar a lógica do Dropdown do Perfil
+    // --- CHAMA AS FUNÇÕES DE INICIALIZAÇÃO ---
+    initializeDashboardFeatures();
+    initializeProfileDropdown();
 });
